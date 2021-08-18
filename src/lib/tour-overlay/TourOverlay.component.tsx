@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useState
+  useState,
 } from "react";
 import {
   Animated,
@@ -11,7 +11,7 @@ import {
   Modal,
   Platform,
   StyleProp,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import Svg, { Defs, Mask, Rect, rgbaArray } from "react-native-svg";
 
@@ -56,7 +56,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
         Platform.select({
           android: false,
           default: false,
-          ios: true
+          ios: true,
         }),
       [Platform.OS]
     );
@@ -73,7 +73,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
                 ? Math.round(cx - tipLayout.width / 2)
                 : Math.round((vwDP(100) - tipLayout.width) / 2),
             marginTop: tipMargin,
-            top: Math.round(cy + r)
+            top: Math.round(cy + r),
           };
 
         case Position.TOP:
@@ -83,21 +83,21 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
                 ? Math.round(cx - tipLayout.width / 2)
                 : Math.round((vwDP(100) - tipLayout.width) / 2),
             marginBottom: tipMargin,
-            top: Math.round(cy - r - tipLayout.height)
+            top: Math.round(cy - r - tipLayout.height),
           };
 
         case Position.LEFT:
           return {
             left: Math.round(cx - r - tipLayout.width),
             marginRight: tipMargin,
-            top: Math.round(cy - tipLayout.height / 2)
+            top: Math.round(cy - tipLayout.height / 2),
           };
 
         case Position.RIGHT:
           return {
             left: Math.round(cx + r),
             marginLeft: tipMargin,
-            top: Math.round(cy - tipLayout.height / 2)
+            top: Math.round(cy - tipLayout.height / 2),
           };
       }
     };
@@ -113,21 +113,21 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
           mass: 5,
           stiffness: 300,
           toValue: { x: cx, y: cy },
-          useNativeDriver
+          useNativeDriver,
         }),
         Animated.spring(radius, {
           damping: 30,
           mass: 5,
           stiffness: 300,
           toValue: r,
-          useNativeDriver
+          useNativeDriver,
         }),
         Animated.timing(tipOpacity, {
           delay: 500,
           duration: 500,
           toValue: 1,
-          useNativeDriver
-        })
+          useNativeDriver,
+        }),
       ]);
 
       moveIn.stop();
@@ -150,10 +150,10 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
           Animated.timing(tipOpacity, {
             duration: 200,
             toValue: 0,
-            useNativeDriver
+            useNativeDriver,
           }).start(({ finished }) => (finished ? resolve() : reject()));
         });
-      }
+      },
     }));
 
     return (
@@ -178,6 +178,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
                   width={spot.width}
                   x={spot.x}
                   y={spot.y}
+                  rx={6}
                   fill="black"
                 />
               </Mask>
@@ -203,7 +204,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
               isLast: current === steps.length - 1,
               next,
               previous,
-              stop
+              stop,
             })}
           </TipView>
         </OverlayView>
