@@ -165,6 +165,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
       >
         <OverlayView accessibilityLabel="Tour Overlay View">
           <Svg
+            onPress={stop}
             accessibilityLabel="Svg overlay view"
             height="100%"
             width="100%"
