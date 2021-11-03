@@ -1,43 +1,61 @@
-import React, { useCallback, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { LayoutRectangle } from "react-native";
 import { rgbaArray } from "react-native-svg";
 
 import { ChildFn, isChildFunction, isPromise } from "../helpers/common";
 
-import { SpotlightTour, SpotlightTourContext, SpotlightTourCtx, TourStep } from "./SpotlightTour.context";
-import { TourOverlay, TourOverlayRef } from "./tour-overlay/TourOverlay.component";
+import {
+  SpotlightTour,
+  SpotlightTourContext,
+  SpotlightTourCtx,
+  TourStep,
+} from "./SpotlightTour.context";
+import {
+  TourOverlay,
+  TourOverlayRef,
+} from "./tour-overlay/TourOverlay.component";
 
 interface SpotlightTourProviderProps {
   children: React.ReactNode | ChildFn<SpotlightTour>;
   overlayColor?: string | number | rgbaArray;
   overlayOpacity?: number | string;
   steps: TourStep[];
+  onClose?: () => void;
 }
 
-export const SpotlightTourProvider = React.forwardRef<SpotlightTour, SpotlightTourProviderProps>((props, ref) => {
-  const { children, overlayColor, overlayOpacity, steps } = props;
+export const SpotlightTourProvider = React.forwardRef<
+  SpotlightTour,
+  SpotlightTourProviderProps
+>((props, ref) => {
+  const { children, overlayColor, overlayOpacity, steps, onClose } = props;
 
   const [current, setCurrent] = useState<number>();
   const [spot, setSpot] = useState<LayoutRectangle>();
 
   const overlayRef = useRef<TourOverlayRef>(null);
 
-  const renderStep = useCallback((index: number) => {
-    if (steps[index] !== undefined) {
-      const beforeHook = steps[index].before?.();
-      const beforePromise = isPromise(beforeHook)
-        ? beforeHook
-        : Promise.resolve();
+  const renderStep = useCallback(
+    (index: number) => {
+      if (steps[index] !== undefined) {
+        const beforeHook = steps[index].before?.();
+        const beforePromise = isPromise(beforeHook)
+          ? beforeHook
+          : Promise.resolve();
 
-      return Promise.all([
-        beforePromise,
-        overlayRef.current?.hideTip()
-      ])
-      .then(() => setCurrent(index));
-    }
+        return Promise.all([beforePromise, overlayRef.current?.hideTip()]).then(
+          () => setCurrent(index)
+        );
+      }
 
-    return Promise.resolve();
-  }, [steps]);
+      return Promise.resolve();
+    },
+    [steps]
+  );
 
   const changeSpot = (newSpot: LayoutRectangle) => {
     setSpot(newSpot);
@@ -49,6 +67,7 @@ export const SpotlightTourProvider = React.forwardRef<SpotlightTour, SpotlightTo
 
   const stop = () => {
     setCurrent(undefined);
+    onClose?.();
   };
 
   const next = () => {
@@ -76,7 +95,7 @@ export const SpotlightTourProvider = React.forwardRef<SpotlightTour, SpotlightTo
     spot,
     start,
     steps,
-    stop
+    stop,
   };
 
   useImperativeHandle(ref, () => ({
@@ -85,15 +104,18 @@ export const SpotlightTourProvider = React.forwardRef<SpotlightTour, SpotlightTo
     next,
     previous,
     start,
-    stop
+    stop,
   }));
 
   return (
     <SpotlightTourContext.Provider value={tour}>
-      {isChildFunction(children)
-        ? <SpotlightTourContext.Consumer>{children}</SpotlightTourContext.Consumer>
-        : <>{children}</>
-      }
+      {isChildFunction(children) ? (
+        <SpotlightTourContext.Consumer>
+          {children}
+        </SpotlightTourContext.Consumer>
+      ) : (
+        <>{children}</>
+      )}
 
       <TourOverlay
         ref={overlayRef}
