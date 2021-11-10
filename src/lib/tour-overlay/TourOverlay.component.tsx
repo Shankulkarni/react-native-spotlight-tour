@@ -10,6 +10,7 @@ import {
   LayoutRectangle,
   Modal,
   Platform,
+  StatusBar,
   StyleProp,
   ViewStyle,
 } from "react-native";
@@ -64,7 +65,10 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
     const getTipStyles = (tipLayout: LayoutRectangle): StyleProp<ViewStyle> => {
       const tipMargin: string = "2%";
       const align = tourStep.alignTo ?? Align.SPOT;
-
+      const hasAndroidNotch =
+        Platform.OS === "android" &&
+        StatusBar.currentHeight &&
+        StatusBar.currentHeight >= 24;
       switch (tourStep.position) {
         case Position.BOTTOM:
           return {
@@ -75,7 +79,6 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
             marginTop: tipMargin,
             top: Math.round(cy + r),
           };
-
         case Position.TOP:
           return {
             left:
@@ -84,6 +87,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
                 : Math.round((vwDP(100) - tipLayout.width) / 2),
             marginBottom: tipMargin,
             top: Math.round(cy - r - tipLayout.height),
+            ...(hasAndroidNotch ? { marginTop: 60 } : {}),
           };
 
         case Position.LEFT:
