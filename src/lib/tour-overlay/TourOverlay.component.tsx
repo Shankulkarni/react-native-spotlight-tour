@@ -83,7 +83,6 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
                 ? Math.round(cx - tipLayout.width / 2)
                 : Math.round((vwDP(100) - tipLayout.width) / 2),
             marginBottom: tipMargin,
-            marginTop: 60,
             top: topPost < 60 ? topPost + 60 : topPost,
           };
 
