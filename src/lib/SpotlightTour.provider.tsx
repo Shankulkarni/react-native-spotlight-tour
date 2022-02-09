@@ -26,13 +26,21 @@ interface SpotlightTourProviderProps {
   overlayOpacity?: number | string;
   steps: TourStep[];
   onClose?: () => void;
+  onBackdropPress: () => void;
 }
 
 export const SpotlightTourProvider = React.forwardRef<
   SpotlightTour,
   SpotlightTourProviderProps
 >((props, ref) => {
-  const { children, overlayColor, overlayOpacity, steps, onClose } = props;
+  const {
+    children,
+    overlayColor,
+    overlayOpacity,
+    steps,
+    onClose,
+    onBackdropPress,
+  } = props;
 
   const [current, setCurrent] = useState<number>();
   const [spot, setSpot] = useState<LayoutRectangle>();
@@ -61,13 +69,18 @@ export const SpotlightTourProvider = React.forwardRef<
     setSpot(newSpot);
   };
 
-  const start = () => {
-    renderStep(0);
+  const start = (index?: number) => {
+    renderStep(index ?? 0);
   };
 
   const stop = () => {
     setCurrent(undefined);
     onClose?.();
+  };
+
+  const onBackdropTap = () => {
+    onBackdropPress();
+    stop();
   };
 
   const next = () => {
@@ -91,6 +104,7 @@ export const SpotlightTourProvider = React.forwardRef<
     current,
     goTo,
     next,
+    onBackdropTap,
     previous,
     spot,
     start,
@@ -102,6 +116,7 @@ export const SpotlightTourProvider = React.forwardRef<
     current,
     goTo,
     next,
+    onBackdropTap,
     previous,
     start,
     stop,

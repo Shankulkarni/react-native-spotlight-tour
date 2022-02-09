@@ -35,7 +35,7 @@ const AnimatedRect = Animated.createAnimatedComponent(Rect);
 export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
   (props, ref) => {
     const { color = "black", opacity = 0.45, tour } = props;
-    const { current, next, previous, spot, steps, stop } = tour;
+    const { current, next, previous, spot, steps, stop, onBackdropTap } = tour;
 
     if (!spot || current === undefined) {
       return null;
@@ -165,7 +165,7 @@ export const TourOverlay = React.forwardRef<TourOverlayRef, TourOverlayProps>(
       >
         <OverlayView accessibilityLabel="Tour Overlay View">
           <Svg
-            onPress={stop}
+            onPress={onBackdropTap}
             accessibilityLabel="Svg overlay view"
             height="100%"
             width="100%"

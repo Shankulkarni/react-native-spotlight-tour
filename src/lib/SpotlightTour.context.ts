@@ -3,17 +3,20 @@ import { LayoutRectangle, Omit } from "react-native";
 
 export enum Align {
   SCREEN = "screen",
-  SPOT = "spot"
+  SPOT = "spot",
 }
 
 export enum Position {
   BOTTOM = "bottom",
   LEFT = "left",
   RIGHT = "right",
-  TOP = "top"
+  TOP = "top",
 }
 
-export type RenderProps = Pick<SpotlightTourCtx, "next" | "previous" | "stop"> & {
+export type RenderProps = Pick<
+  SpotlightTourCtx,
+  "next" | "previous" | "stop"
+> & {
   current: number;
   isFirst: boolean;
   isLast: boolean;
@@ -33,32 +36,39 @@ export interface SpotlightTourCtx {
   next(): void;
   previous(): void;
   spot?: LayoutRectangle;
-  start(): void;
+  start(index?: number): void;
   steps: TourStep[];
   stop(): void;
+  onBackdropTap(): void;
 }
 
 export const SpotlightTourContext = createContext<SpotlightTourCtx>({
   changeSpot: () => undefined,
   goTo: () => undefined,
   next: () => undefined,
+  onBackdropTap: () => undefined,
   previous: () => undefined,
   start: () => undefined,
   steps: [],
-  stop: () => undefined
+  stop: () => undefined,
 });
 
-export type SpotlightTour = Omit<SpotlightTourCtx, "changeSpot" | "spot" | "steps">;
+export type SpotlightTour = Omit<
+  SpotlightTourCtx,
+  "changeSpot" | "spot" | "steps"
+>;
 
 export function useSpotlightTour(): SpotlightTour {
-  const { current, goTo, next, previous, start, stop } = useContext(SpotlightTourContext);
+  const { current, goTo, next, previous, start, stop, onBackdropTap } =
+    useContext(SpotlightTourContext);
 
   return {
     current,
     goTo,
     next,
+    onBackdropTap,
     previous,
     start,
-    stop
+    stop,
   };
 }
