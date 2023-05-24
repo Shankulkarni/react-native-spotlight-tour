@@ -16,7 +16,7 @@ export const AttachStep: React.FC<AttachStepProps> = ({ children, disabled, inde
 
   useEffect(() => {
     if (!spot) {
-      changeSpot({ height: 0, width: 0, x: 0, y: 0 });
+      changeSpot({ height: 0, width: 0, x: 0, y: 400 });
     }
 
     if (!disabled && current === index) {
